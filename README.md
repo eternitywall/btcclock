@@ -1,4 +1,4 @@
-# btcclock
+# btcclock [![Build Status](https://travis-ci.org/lvaccaro/btcclock.svg?branch=master)](https://travis-ci.org/lvaccaro/btcclock)
 Bitcoin and others Android Widget Clock.
 
 ## Define your new clock
