@@ -18,7 +18,7 @@ public class StandardClock extends Clock {
 ```
 * Run the clock behaviour and callback the parent method this.updateListener.callback() with the follows params: context, big widget text line, bottom widget text line, image resource file.
 ```
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -26,7 +26,7 @@ public class StandardClock extends Clock {
                 mCalendar.setTimeInMillis(System.currentTimeMillis());
                 CharSequence time = DateFormat.format("HH:mm", mCalendar);
                 CharSequence description = DateFormat.format("d MMM yyyy", mCalendar);
-                StandardClock.this.updateListener.callback(context, time.toString(), description.toString(), StandardClock.this.resource);
+                StandardClock.this.updateListener.callback(context, appWidgetId, time.toString(), description.toString(), StandardClock.this.resource);
             }
         }.run();
     }
@@ -45,8 +45,4 @@ private static Clock[] clocks = new Clock[]{
 ```
 
 ## App Screenshots
-![App Screenshot](https://raw.githubusercontent.com/lvaccaro/btcclock/master/resources/Screenshot_1507141470.png)
-
-![App Screenshot](https://raw.githubusercontent.com/lvaccaro/btcclock/master/resources/Screenshot_1507141483.png)
-
-![App Screenshot](https://raw.githubusercontent.com/lvaccaro/btcclock/master/resources/Screenshot_1507141494.png)
+![App Screenshot](https://raw.githubusercontent.com/lvaccaro/btcclock/master/resources/Screenshot_1507475354.png)
