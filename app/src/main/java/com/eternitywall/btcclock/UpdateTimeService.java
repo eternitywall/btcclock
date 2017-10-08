@@ -68,7 +68,7 @@ public final class UpdateTimeService extends Service implements Clock.UpdateList
 
 
     private void event() {
-        Context context = getApplicationContext();
+            Context context = getApplicationContext();
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ClockWidget.class));
         for (int id : ids) {
             Clock clock = ClockWidgetConfigureActivity.loadIdPref(context, id);
