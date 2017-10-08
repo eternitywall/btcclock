@@ -24,7 +24,7 @@ public class BitcoinGithubClock extends Clock {
 
     String url = "https://api.github.com/repos/bitcoin/bitcoin/commits/master";
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -38,7 +38,7 @@ public class BitcoinGithubClock extends Clock {
                         super.onSuccess(statusCode, headers, response);
                         try {
                             String height = response.getString("sha");
-                            BitcoinGithubClock.this.updateListener.callback(context, height, BitcoinGithubClock.this.name, BitcoinGithubClock.this.resource);
+                            BitcoinGithubClock.this.updateListener.callback(context, appWidgetId, height, BitcoinGithubClock.this.name, BitcoinGithubClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -18,7 +18,8 @@ public class Clocks {
             new StandardClock(),
             new NasaClock(),
             new TimestampClock(),
-            new SpaceXClock()
+            new SpaceXClock(),
+            new EthereumClock()
     };
 
     public static Clock[] get(){

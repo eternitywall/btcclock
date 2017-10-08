@@ -8,6 +8,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.eternitywall.btcclock.Clock;
 import com.eternitywall.btcclock.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +26,7 @@ public class SpaceXClock extends Clock {
 
     String url = "https://api.spacexdata.com/v1/launches/latest";
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -36,13 +37,13 @@ public class SpaceXClock extends Clock {
                 client.get(url,new JsonHttpResponseHandler(){
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(getClass().getName(),response.toString());
-                        JSONObject json = null;
                         try {
-                            String count = String.valueOf(response.getLong("flight_number"));
-                            SpaceXClock.this.updateListener.callback(context, count, SpaceXClock.this.name, SpaceXClock.this.resource);
+                            JSONObject json = response.getJSONObject(0);
+                            String count = String.valueOf(json.getLong("flight_number"));
+                            SpaceXClock.this.updateListener.callback(context, appWidgetId, count, SpaceXClock.this.name, SpaceXClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

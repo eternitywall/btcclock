@@ -18,7 +18,7 @@ public class StandardClock extends Clock {
         super(0, "Standard time", R.drawable.clock);
     }
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -27,7 +27,7 @@ public class StandardClock extends Clock {
                 CharSequence time = DateFormat.format("HH:mm", mCalendar);
                 CharSequence description = DateFormat.format("d MMM yyyy", mCalendar);
 
-                StandardClock.this.updateListener.callback(context, time.toString(), description.toString(), StandardClock.this.resource);
+                StandardClock.this.updateListener.callback(context, appWidgetId, time.toString(), description.toString(), StandardClock.this.resource);
             }
         }.run();
     }

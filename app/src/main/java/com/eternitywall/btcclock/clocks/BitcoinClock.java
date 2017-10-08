@@ -24,7 +24,7 @@ public class BitcoinClock extends Clock {
 
     String url = "https://insight.bitpay.com/api/blocks?limit=1";
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -40,7 +40,7 @@ public class BitcoinClock extends Clock {
                         try {
                             json = (JSONObject) response.getJSONArray("blocks").get(0);
                             String height = String.valueOf(json.getLong("height"));
-                            BitcoinClock.this.updateListener.callback(context, height, BitcoinClock.this.name, BitcoinClock.this.resource);
+                            BitcoinClock.this.updateListener.callback(context, appWidgetId, height, BitcoinClock.this.name, BitcoinClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

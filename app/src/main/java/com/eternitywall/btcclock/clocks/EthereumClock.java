@@ -24,7 +24,7 @@ public class EthereumClock extends Clock {
 
     String url = "https://api.blockcypher.com/v1/eth/main";
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -40,7 +40,7 @@ public class EthereumClock extends Clock {
                         try {
                             json = (JSONObject) response;
                             String height = String.valueOf(json.getLong("height"));
-                            EthereumClock.this.updateListener.callback(context, height, EthereumClock.this.name, EthereumClock.this.resource);
+                            EthereumClock.this.updateListener.callback(context, appWidgetId, height, EthereumClock.this.name, EthereumClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

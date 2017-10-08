@@ -29,10 +29,10 @@ public class Clock {
 
     public interface UpdateListener {
         // you can define any parameter as per your requirement
-        void callback(Context context, String time, String description, int resource);
+        void callback(Context context, int appWidgetId, String time, String description, int resource);
     }
 
-    public void run(final Context context){
+    public void run(final Context context, int appWidgetId){
 
     }
 }

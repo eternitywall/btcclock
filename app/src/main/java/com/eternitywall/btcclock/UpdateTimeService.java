@@ -69,15 +69,18 @@ public final class UpdateTimeService extends Service implements Clock.UpdateList
 
     private void event() {
         Context context = getApplicationContext();
-        Clock clock = ClockWidgetConfigureActivity.loadIdPref(context);
-        Log.d("widget",String.valueOf(clock.id));
-        clock.updateListener = this;
-        clock.run(context);
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ClockWidget.class));
+        for (int id : ids) {
+            Clock clock = ClockWidgetConfigureActivity.loadIdPref(context, id);
+            Log.d("widget", String.valueOf(clock.id));
+            clock.updateListener = this;
+            clock.run(context, id);
+        }
     }
 
 
     @Override
-    public void callback( Context context, final String time, String description, final int resource) {
+    public void callback( Context context, int appWidgetId, final String time, String description, final int resource) {
 
         Log.d("widget", "callback");
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.clock_widget);
@@ -85,8 +88,7 @@ public final class UpdateTimeService extends Service implements Clock.UpdateList
         views.setTextViewText(R.id.tvTime, time);
         views.setImageViewResource(R.id.imageView, resource);
 
-        final ComponentName mComponentName = new ComponentName(context, ClockWidget.class);
         final AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(context);
-        mAppWidgetManager.updateAppWidget(mComponentName, views);
+        mAppWidgetManager.updateAppWidget(appWidgetId,views);
     }
 }

@@ -34,17 +34,17 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveIdPref(final Context context, Clock clock) {
+    static void saveIdPref(final Context context, int appWidgetId, Clock clock) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putInt(PREF_PREFIX_KEY, clock.id);
+        prefs.putInt(PREF_PREFIX_KEY + appWidgetId, clock.id);
         prefs.apply();
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
     // If there is no preference saved, get the default from a resource
-    static Clock loadIdPref(final Context context) {
+    static Clock loadIdPref(final Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        int id = prefs.getInt(PREF_PREFIX_KEY, -1);
+        int id = prefs.getInt(PREF_PREFIX_KEY + appWidgetId, -1);
         if (id == -1) {
             return new StandardClock();
         } else {
@@ -52,9 +52,9 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
         }
     }
 
-    static void deleteIdPref(final Context context) {
+    static void deleteIdPref(final Context context, int appWidgetId) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY);
+        prefs.remove(PREF_PREFIX_KEY + appWidgetId);
         prefs.apply();
     }
 
@@ -77,6 +77,11 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
+        // If this activity was started with an intent without an app widget ID, finish with an error.
+        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+            return;
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Blockchain Clock");
@@ -88,7 +93,7 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
         mRecyclerView.setAdapter(mClockAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Clock clock = loadIdPref(this);
+        Clock clock = loadIdPref(this,mAppWidgetId);
         for(int i=0; i < clocks.size() ;i++){
             if(clocks.get(i).id == clock.id){
                 mClockAdapter.mSelectedItem = i;
@@ -103,7 +108,7 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
         Clock[] clocks = Clocks.get();
         for(int i=0; i < clocks.length ;i++){
             if(i == position){
-                saveIdPref(this,clocks[i]);
+                saveIdPref(this, mAppWidgetId, clocks[i]);
                 invalidate();
             }
         }
@@ -120,13 +125,11 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
         //AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         //ClockWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
-        // If this activity was started with an intent without an app widget ID, finish with an error.
-        if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            setResult(RESULT_OK, resultValue);
-            finish();
-        }
+        // Make sure we pass back the original appWidgetId
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        setResult(RESULT_OK, resultValue);
+        finish();
 
     }
 

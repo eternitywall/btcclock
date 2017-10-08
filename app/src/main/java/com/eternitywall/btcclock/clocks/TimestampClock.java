@@ -15,14 +15,14 @@ public class TimestampClock extends Clock {
         super(1, "UNIX Timestamp", R.drawable.time);
     }
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
                 String time = String.valueOf(System.currentTimeMillis());
                 String description = TimestampClock.this.name;
 
-                TimestampClock.this.updateListener.callback(context, time, description, TimestampClock.this.resource);
+                TimestampClock.this.updateListener.callback(context, appWidgetId, time, description, TimestampClock.this.resource);
             }
         }.run();
     }

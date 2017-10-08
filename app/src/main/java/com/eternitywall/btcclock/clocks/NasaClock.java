@@ -25,7 +25,7 @@ public class NasaClock extends Clock {
 
     String url = "https://api.nasa.gov/neo/rest/v1/stats?api_key=DEMO_KEY";
 
-    public void run(final Context context){
+    public void run(final Context context, final int appWidgetId){
         new Runnable() {
             @Override
             public void run() {
@@ -42,7 +42,7 @@ public class NasaClock extends Clock {
                         JSONObject json = null;
                         try {
                             String count = String.valueOf(response.getLong("near_earth_object_count"));
-                            NasaClock.this.updateListener.callback(context, count, NasaClock.this.name, NasaClock.this.resource);
+                            NasaClock.this.updateListener.callback(context, appWidgetId, count, NasaClock.this.name, NasaClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
