@@ -2,11 +2,12 @@ package com.eternitywall.btcclock.clocks;
 
 import android.content.Context;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.eternitywall.btcclock.Clock;
 import com.eternitywall.btcclock.R;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,13 +17,13 @@ import cz.msebera.android.httpclient.Header;
  * Created by luca on 26/09/2017.
  */
 
-public class BitcoinGithubClock extends Clock {
+public class BitcoinPriceClock extends Clock {
 
-    public BitcoinGithubClock() {
-        super(5, "BITCOIN: sha of the last commit on github", R.drawable.bitcoin);
+    public BitcoinPriceClock() {
+        super(8, "BITCOIN: last price from coinmarketcap.com", R.drawable.bitcoin);
     }
 
-    String url = "https://api.github.com/repos/bitcoin/bitcoin/commits/master";
+    String url = "https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=USD";
 
     public void run(final Context context, final int appWidgetId){
         new Runnable() {
@@ -30,15 +31,14 @@ public class BitcoinGithubClock extends Clock {
             public void run() {
 
                 AsyncHttpClient client = new AsyncHttpClient();
-                client.addHeader("User-Agent","Awesome-Octocat-App");
                 client.get(url,  new JsonHttpResponseHandler(){
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         super.onSuccess(statusCode, headers, response);
                         try {
-                            String height = response.getString("sha");
-                            BitcoinGithubClock.this.updateListener.callback(context, appWidgetId, height, BitcoinGithubClock.this.name, BitcoinGithubClock.this.resource);
+                            String height = response.getJSONObject(0).getString("price_usd");
+                            BitcoinPriceClock.this.updateListener.callback(context, appWidgetId, height, BitcoinPriceClock.this.name, BitcoinPriceClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

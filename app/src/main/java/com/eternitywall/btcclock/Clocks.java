@@ -15,11 +15,11 @@ public class Clocks {
     private static Clock[] clocks = new Clock[]{
             new BitcoinClock(),
             new BitcoinGithubClock(),
+            new BitcoinPriceClock(),
             new StandardClock(),
             new NasaClock(),
             new TimestampClock(),
-            new SpaceXClock(),
-            new EthereumClock()
+            new SpaceXClock()
     };
 
     public static Clock[] get(){
