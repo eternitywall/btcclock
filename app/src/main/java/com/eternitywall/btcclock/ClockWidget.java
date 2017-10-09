@@ -2,9 +2,12 @@ package com.eternitywall.btcclock;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 /**
  * Implementation of App Widget functionality.
@@ -15,29 +18,67 @@ public class ClockWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
         Log.d("widget", "onUpdate");
-        Intent intent = new Intent(UpdateTimeService.UPDATE_TIME);
-        intent.setPackage("com.eternitywall.btcclock");
-        context.startService(intent);
+        start(context);
     }
 
     @Override
     public void onDeleted(final Context context, final int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
+        for(int id : appWidgetIds) {
+            ClockWidgetConfigureActivity.deleteIdPref(context, id);
+        }
     }
 
     @Override
     public void onEnabled(final Context context) {
         // Enter relevant functionality for when the first widget is created
         Log.d("widget", "onEnabled");
-        final Intent intent = new Intent(UpdateTimeService.UPDATE_TIME);
-        intent.setPackage("com.eternitywall.btcclock");
-        context.startService(intent);
+        start(context);
     }
 
     @Override
     public void onDisabled(final Context context) {
         // Enter relevant functionality for when the last widget is disabled
-        context.stopService(new Intent(context, UpdateTimeService.class));
+        stop(context);
+    }
+
+
+    private void start(final Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SyncJobService.start(context);
+        } else {
+            UpdateTimeService.start(context);
+        }
+    }
+    private void stop(final Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SyncJobService.stop(context);
+        } else {
+            UpdateTimeService.stop(context);
+        }
+    }
+
+
+    public static void tick(final Context context, final Clock.UpdateListener listener) {
+        int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, ClockWidget.class));
+        for (int id : ids) {
+            Clock clock = ClockWidgetConfigureActivity.loadIdPref(context, id);
+            Log.d("widget", String.valueOf(clock.id));
+            clock.updateListener = listener;
+            clock.run(context, id);
+        }
+    }
+
+    public static void callback(final Context context, final int appWidgetId, final String time, String description, final int resource) {
+
+        Log.d("widget", "callback");
+        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.clock_widget);
+        views.setTextViewText(R.id.tvDescription, description);
+        views.setTextViewText(R.id.tvTime, time);
+        views.setImageViewResource(R.id.imageView, resource);
+
+        final AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(context);
+        mAppWidgetManager.updateAppWidget(appWidgetId,views);
     }
 
 }

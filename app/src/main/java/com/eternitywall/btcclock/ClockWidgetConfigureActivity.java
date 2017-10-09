@@ -104,7 +104,7 @@ public class ClockWidgetConfigureActivity extends Activity implements RadioAdapt
 
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(final View view, final int position) {
         Clock[] clocks = Clocks.get();
         for(int i=0; i < clocks.length ;i++){
             if(i == position){
