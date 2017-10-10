@@ -33,6 +33,7 @@
         android:fontFamily="sans-serif-thin"
         android:gravity="center_vertical"
         android:text=""
+        android:ellipsize="end"
         android:textColor="#ffffff"
         android:textSize="36sp" />
 
