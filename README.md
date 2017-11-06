@@ -1,5 +1,6 @@
 # btcclock [![Build Status](https://travis-ci.org/lvaccaro/btcclock.svg?branch=master)](https://travis-ci.org/lvaccaro/btcclock)
-[![download](https://www.overdrive.com/Content/img/icons/png/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.eternitywall.btcclock)
+[![download](http://style.anu.edu.au/_anu/images/icons/icon-google-play.png)](https://play.google.com/store/apps/details?id=com.eternitywall.btcclock)
+
 Bitcoin and others Android Widget Clock.
 
 ## Define your new clock
