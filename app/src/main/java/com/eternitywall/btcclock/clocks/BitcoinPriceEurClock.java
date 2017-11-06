@@ -20,17 +20,17 @@ import cz.msebera.android.httpclient.Header;
  * Created by luca on 26/09/2017.
  */
 
-public class BitcoinPriceClock extends Clock {
+public class BitcoinPriceEurClock extends Clock {
     private final static DateFormat formatter = DateFormat.getDateTimeInstance(
             DateFormat.SHORT,
             DateFormat.SHORT);
 
 
-    public BitcoinPriceClock() {
-        super(8, "BTC/USD last price from coinmarketcap.com", R.drawable.bitcoin);
+    public BitcoinPriceEurClock() {
+        super(9, "BTC/EUR last price from coinmarketcap.com", R.drawable.bitcoin);
     }
 
-    String url = "https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=USD";
+    String url = "https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR";
 
     public void run(final Context context, final int appWidgetId){
         new Runnable() {
@@ -45,13 +45,13 @@ public class BitcoinPriceClock extends Clock {
                         super.onSuccess(statusCode, headers, response);
                         try {
                             final JSONObject jsonObject = response.getJSONObject(0);
-                            String height = "$ "+jsonObject.getString("price_usd");
+                            String height = "€ "+jsonObject.getString("price_usd");
                             Long lastUpdated = Long.parseLong( jsonObject.getString("last_updated") );
 
                             final Date date = new Date(lastUpdated*1000L);
                             String desc = "Coinmarketcap @ " + formatter.format(date);
 
-                            BitcoinPriceClock.this.updateListener.callback(context, appWidgetId, height, desc, BitcoinPriceClock.this.resource);
+                            BitcoinPriceEurClock.this.updateListener.callback(context, appWidgetId, height, desc, BitcoinPriceEurClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

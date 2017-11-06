@@ -16,6 +16,7 @@ public class Clocks {
             new BitcoinClock(),
             new BitcoinGithubClock(),
             new BitcoinPriceClock(),
+            new BitcoinPriceEurClock(),
             new StandardClock(),
             new NasaClock(),
             new TimestampClock(),

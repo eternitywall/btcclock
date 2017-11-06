@@ -24,6 +24,16 @@ public final class UpdateTimeService extends Service implements Clock.UpdateList
         mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
     }
 
+    public static void start(final Context context){
+        final Intent intent = new Intent(UpdateTimeService.UPDATE_TIME);
+        intent.setPackage("com.eternitywall.btcclock");
+        context.startService(intent);
+    }
+    public static void stop(final Context context){
+        Intent service = new Intent(context.getApplicationContext(), UpdateTimeService.class);
+        context.stopService(service);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,7 +55,8 @@ public final class UpdateTimeService extends Service implements Clock.UpdateList
 
         if (intent != null) {
             if (UPDATE_TIME.equals(intent.getAction())) {
-                event();
+                Context context = getApplicationContext();
+                ClockWidget.tick(context, UpdateTimeService.this);
             }
         }
 
@@ -62,33 +73,12 @@ public final class UpdateTimeService extends Service implements Clock.UpdateList
         @Override
         public void onReceive(final Context context, final Intent intent) {
             Log.d("widget", "mTimeChangedReceiver");
-            event();
+            ClockWidget.tick(context, UpdateTimeService.this);
         }
     };
 
-
-    private void event() {
-            Context context = getApplicationContext();
-        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ClockWidget.class));
-        for (int id : ids) {
-            Clock clock = ClockWidgetConfigureActivity.loadIdPref(context, id);
-            Log.d("widget", String.valueOf(clock.id));
-            clock.updateListener = this;
-            clock.run(context, id);
-        }
-    }
-
-
     @Override
-    public void callback( Context context, int appWidgetId, final String time, String description, final int resource) {
-
-        Log.d("widget", "callback");
-        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.clock_widget);
-        views.setTextViewText(R.id.tvDescription, description);
-        views.setTextViewText(R.id.tvTime, time);
-        views.setImageViewResource(R.id.imageView, resource);
-
-        final AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(context);
-        mAppWidgetManager.updateAppWidget(appWidgetId,views);
+    public void callback(final Context context, final int appWidgetId, final String time, final String description, final int resource) {
+        ClockWidget.callback(context, appWidgetId, time, description, resource);
     }
 }
