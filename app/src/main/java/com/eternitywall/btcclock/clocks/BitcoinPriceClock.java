@@ -27,7 +27,7 @@ public class BitcoinPriceClock extends Clock {
 
 
     public BitcoinPriceClock() {
-        super(8, "BITCOIN: last price from coinmarketcap.com", R.drawable.bitcoin);
+        super(8, "BTC/USD last price from coinmarketcap.com", R.drawable.bitcoin);
     }
 
     String url = "https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=USD";
@@ -45,7 +45,7 @@ public class BitcoinPriceClock extends Clock {
                         super.onSuccess(statusCode, headers, response);
                         try {
                             final JSONObject jsonObject = response.getJSONObject(0);
-                            String height = jsonObject.getString("price_usd");
+                            String height = "$ "+jsonObject.getString("price_usd");
                             Long lastUpdated = Long.parseLong( jsonObject.getString("last_updated") );
 
                             final Date date = new Date(lastUpdated*1000L);
