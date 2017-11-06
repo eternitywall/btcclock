@@ -7,6 +7,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.eternitywall.btcclock.Clock;
 import com.eternitywall.btcclock.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,11 +41,19 @@ public class BitcoinClock extends Clock {
                         try {
                             json = (JSONObject) response.getJSONArray("blocks").get(0);
                             String height = String.valueOf(json.getLong("height"));
-                            BitcoinClock.this.updateListener.callback(context, appWidgetId, height, BitcoinClock.this.name, BitcoinClock.this.resource);
+                            String hash = json.getString("hash");
+                            hash = hash.substring(0,24) + "…" + hash.substring(56);
+                            BitcoinClock.this.updateListener.callback(context, appWidgetId, height, hash, BitcoinClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        super.onSuccess(statusCode, headers, response);
+                        JSONObject json = null;
                     }
 
                     @Override

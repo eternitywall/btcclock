@@ -11,6 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -18,6 +21,10 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class BitcoinPriceClock extends Clock {
+    private final static DateFormat formatter = DateFormat.getDateTimeInstance(
+            DateFormat.SHORT,
+            DateFormat.SHORT);
+
 
     public BitcoinPriceClock() {
         super(8, "BITCOIN: last price from coinmarketcap.com", R.drawable.bitcoin);
@@ -37,8 +44,14 @@ public class BitcoinPriceClock extends Clock {
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         super.onSuccess(statusCode, headers, response);
                         try {
-                            String height = response.getJSONObject(0).getString("price_usd");
-                            BitcoinPriceClock.this.updateListener.callback(context, appWidgetId, height, BitcoinPriceClock.this.name, BitcoinPriceClock.this.resource);
+                            final JSONObject jsonObject = response.getJSONObject(0);
+                            String height = jsonObject.getString("price_usd");
+                            Long lastUpdated = Long.parseLong( jsonObject.getString("last_updated") );
+
+                            final Date date = new Date(lastUpdated*1000L);
+                            String desc = "Coinmarketcap @ " + formatter.format(date);
+
+                            BitcoinPriceClock.this.updateListener.callback(context, appWidgetId, height, desc, BitcoinPriceClock.this.resource);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
