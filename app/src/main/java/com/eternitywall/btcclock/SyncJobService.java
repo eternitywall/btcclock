@@ -40,10 +40,15 @@ public class SyncJobService  extends JobService implements Clock.UpdateListener 
         builder.setOverrideDeadline(30 *1000); // maximum delay
         //builder.setPeriodic(10*0000);
         //builder.setPersisted(true);
-        //builder.setRequiresDeviceIdle(true); // device should be idle
+        builder.setRequiresDeviceIdle(false); // device should not be only idle
         builder.setRequiresCharging(false); // we don't care if the device is charging or not
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
-        jobScheduler.schedule(builder.build());
+        int result = jobScheduler.schedule(builder.build());
+        if (result==JobScheduler.RESULT_SUCCESS){
+            Log.d(SyncJobService.class.getName(),"result: success");
+        } else {
+            Log.d(SyncJobService.class.getName(),"result: failure");
+        }
     }
 
 

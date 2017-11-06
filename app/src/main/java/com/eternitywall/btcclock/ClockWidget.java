@@ -43,21 +43,21 @@ public class ClockWidget extends AppWidgetProvider {
     }
 
 
-    private void start(final Context context){
+    public static void start(final Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SyncJobService.start(context);
         } else {
             UpdateTimeService.start(context);
         }
     }
-    private void stop(final Context context){
+
+    public static void stop(final Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SyncJobService.stop(context);
         } else {
             UpdateTimeService.stop(context);
         }
     }
-
 
     public static void tick(final Context context, final Clock.UpdateListener listener) {
         int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, ClockWidget.class));
