@@ -25,6 +25,8 @@ public class BitcoinPriceClock extends Clock {
             DateFormat.SHORT,
             DateFormat.SHORT);
 
+    private final static int EVERY = 20;
+    private static int current=-1;
 
     public BitcoinPriceClock() {
         super(8, "BTC/USD last price from coinmarketcap.com", R.drawable.bitcoin);
@@ -33,6 +35,11 @@ public class BitcoinPriceClock extends Clock {
     String url = "https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=USD";
 
     public void run(final Context context, final int appWidgetId){
+        current++;
+        if(current!=0 && current < EVERY)
+            return;
+        current=0;
+
         new Runnable() {
             @Override
             public void run() {
